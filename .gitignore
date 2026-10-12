@@ -1,0 +1,13 @@
+.aws/
+*credentials*
+*accessKeys*.csv
+*.tfstate
+*.tfstate.*
+.terraform/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.vscode/
+.DS_Store
