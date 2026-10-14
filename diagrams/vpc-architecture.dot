@@ -1,0 +1,112 @@
+digraph AWS_VPC_Architecture {
+  graph [
+    label="AWS VPC Connectivity Lab | ap-south-1",
+    labelloc=t,
+    fontsize=20,
+    fontname="Arial",
+    rankdir=TB,
+    splines=polyline,
+    nodesep=0.55,
+    ranksep=0.7,
+    pad=0.25
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="Arial",
+    fontsize=11,
+    margin="0.18,0.12",
+    color="#526579",
+    fillcolor="#F4F7FA"
+  ];
+
+  edge [
+    fontname="Arial",
+    fontsize=9,
+    color="#526579",
+    arrowsize=0.8
+  ];
+
+  internet [
+    label="Internet",
+    shape=ellipse,
+    fillcolor="#E8F2FF"
+  ];
+
+  igw [
+    label="Internet Gateway\nIGW",
+    fillcolor="#FFF2CC"
+  ];
+
+  subgraph cluster_vpc {
+    label="VPC: 10.0.0.0/16";
+    fontsize=15;
+    fontname="Arial";
+    color="#4C78A8";
+    style="rounded";
+    penwidth=2;
+    margin=20;
+
+    public_rt [
+      label="Public Route Table\n0.0.0.0/0 -> IGW",
+      fillcolor="#D9EAD3"
+    ];
+
+    private_rt [
+      label="Private Route Table\nLocal route only",
+      fillcolor="#FCE5CD"
+    ];
+
+    subgraph cluster_public {
+      label="Public Subnet: 10.0.1.0/24";
+      fontsize=12;
+      color="#6AA84F";
+      style="rounded,dashed";
+
+      public_subnet [
+        label="Public Subnet\nPublic IPv4 enabled",
+        fillcolor="#E2F0D9"
+      ];
+
+      ec2 [
+        label="EC2 Ubuntu 24.04\n10.0.1.48\nNginx - HTTP :80",
+        fillcolor="#D9EAD3"
+      ];
+    }
+
+    subgraph cluster_private {
+      label="Private Subnet: 10.0.2.0/24";
+      fontsize=12;
+      color="#E69138";
+      style="rounded,dashed";
+
+      private_subnet [
+        label="Private Subnet\nNo public IPv4",
+        fillcolor="#FCE5CD"
+      ];
+    }
+
+    public_rt -> public_subnet [
+      label="associated",
+      style=dashed,
+      arrowhead=none
+    ];
+
+    public_subnet -> ec2 [label="hosts"];
+
+    private_rt -> private_subnet [
+      label="associated",
+      style=dashed,
+      arrowhead=none
+    ];
+  }
+
+  internet -> igw [label="HTTP request"];
+  igw -> public_rt [label="default route"];
+  ec2 -> internet [
+    label="HTTP response",
+    color="#38761D",
+    constraint=false
+  ];
+}
