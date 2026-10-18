@@ -242,6 +242,7 @@ A dedicated Security Group was created for the web server.
 |---|---:|---|---|
 | TCP | 22 | Administrator public IP `/32` | SSH administration |
 | TCP | 80 | `0.0.0.0/0` | Public HTTP access |
+| TCP | 443 | `0.0.0.0/0` | Public HTTPS access |
 
 ### Outbound Rules
 
@@ -411,11 +412,12 @@ started. Retrieve the current address before connecting.
 | WEB-03 | Local HTTP response | ✅ PASS |
 | WEB-04 | Browser access to Nginx | ✅ PASS |
 | PRIV-01 | Private subnet workload test | ⏳ NOT TESTED |
-| TLS-01 | HTTPS configuration | ⏳ FUTURE WORK |
+| TLS-01 | HTTPS configuration | ✅ PASS |
 
-The results above reflect the commands and browser checks completed
-during this lab. Private subnet workload connectivity and HTTPS
-have not yet been implemented or verified.
+The results above reflect the commands and connectivity checks completed
+during this lab. HTTPS was configured with a self-signed certificate and
+returned HTTP 200 OK using `curl -k`. Private subnet workload connectivity
+remains untested.
 
 ---
 

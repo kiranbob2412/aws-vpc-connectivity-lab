@@ -86,7 +86,11 @@ AWS Console screenshots should be added to the repository separately.
 - A workload has not been launched in the private subnet.
 - Public-to-private workload connectivity has not been tested.
 - Private subnet internet isolation has been assessed from route configuration, not an end-to-end private instance test.
-- HTTPS/TLS has not been configured or tested.
+- HTTPS was configured using a self-signed certificate.
+- Nginx configuration validation succeeded.
+- TCP port 443 was verified as listening.
+- Public HTTPS connectivity returned HTTP 200 OK using `curl -k`.
+- Certificate trust validation was not performed.
 - NAT Gateway has not been configured.
 
 ## 9. Conclusion
