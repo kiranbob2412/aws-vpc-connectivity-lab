@@ -59,7 +59,7 @@ before repeating connectivity tests.
 | Nginx configuration | PASS | nginx -t successful |
 | Nginx HTTPS listener | PASS | Port 443 listening on IPv4 and IPv6 |
 | NACL configuration and association | PASS | AWS CLI verification |
-| NACL allow/deny behavior | NOT TESTED | End-to-end behavior test pending |
+| NACL allow/deny behavior | PASS | HTTP blocked by NACL deny rule; restored allow rule and HTTP returned 200 OK |
 | Private workload connectivity | NOT TESTED | No private workload test performed |
 
 ## HTTPS Test
@@ -79,6 +79,34 @@ verification for this connectivity test.
 
 ## Limitations
 - Private subnet workload connectivity has not been tested.
-- NACL allow/deny behavior has not been tested end-to-end.
 - Public IP addresses can change after stopping and starting an instance.
 - AWS resource costs must be reviewed before final cleanup.
+## NACL Allow/Deny End-to-End Test
+
+### Objective
+Verify that the custom Network ACL can block and restore public HTTP traffic.
+
+### Environment
+- AWS Region: ap-south-1
+- NACL ID: acl-037d90c25614b3e78
+- Inbound Rule: 110
+- Protocol: TCP
+- Port: 80
+- CIDR: 0.0.0.0/0
+
+### Test Procedure and Results
+
+1. Verified that public HTTP connectivity returned HTTP 200 OK.
+2. Changed inbound NACL Rule 110 to deny TCP port 80.
+3. Verified that the rule action was set to deny using AWS CLI.
+4. Tested public HTTP connectivity; curl timed out after 5 seconds.
+5. Restored inbound Rule 110 to allow TCP port 80.
+6. Tested public HTTP connectivity again; HTTP returned 200 OK.
+
+### Result
+PASS — NACL deny behavior blocked public HTTP traffic, and
+restoring the allow rule restored HTTP connectivity.
+
+### Scope
+This test validates inbound NACL behavior for HTTP traffic.
+It does not validate every NACL rule or private subnet connectivity.
